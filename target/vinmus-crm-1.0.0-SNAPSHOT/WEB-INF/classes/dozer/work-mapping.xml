@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://dozer.sourceforge.net
+           http://dozer.sourceforge.net/schema/beanmapping.xsd">
+
+    <mapping wildcard="true" map-null="true">
+        <class-a>com.bys.crm.domain.erp.model.PMTasks</class-a>
+        <class-b>com.bys.crm.app.dto.ActivityDto</class-b>
+        <field copy-by-reference="true">
+            <a>createdDate</a>
+            <b>createdDate</b>
+        </field>
+        <field copy-by-reference="true">
+            <a>updatedDate</a>
+            <b>updatedDate</b>
+        </field>
+        <field copy-by-reference="true">
+            <a>startDate</a>
+            <b>startDate</b>
+        </field>
+        <field copy-by-reference="true">
+            <a>endDate</a>
+            <b>endDate</b>
+        </field>
+    </mapping>
+
+</mappings>

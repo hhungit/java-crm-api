@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:repository="http://www.springframework.org/schema/data/repository"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.1.xsd
+		http://www.springframework.org/schema/data/repository http://www.springframework.org/schema/data/repository/spring-repository-1.0.xsd">
+
+	<context:spring-configured />
+
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	<bean
+		class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor">
+		<property name="persistenceUnits">
+			<map>
+				<entry key="unit1" value="domain" />
+			</map>
+		</property>
+	</bean>
+
+	<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
+		name="jpaVendorAdapter">
+		<property name="showSql" value="true" />
+<!-- 		set true khi chay lan dau -->
+		<property name="generateDdl" value="false" />
+		<property name="database" value="${db.type}" />
+	</bean>
+
+	<bean class="org.springframework.orm.jpa.JpaTransactionManager"
+		name="transactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+
+	<bean
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+		name="entityManagerFactory">
+		<property name="persistenceUnitName" value="domain" />
+		<property name="dataSource" value="#{dataSources['${db.type}']}" />
+		<property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
+		<property name="jpaProperties">
+			<props>
+				<prop key="org.hibernate.envers.audit_table_suffix">_HISTORYS</prop>
+<!--  				<prop key="org.hibernate.envers.default_schema">CRM_VINMUS_AUDIT</prop> -->
+				<prop key="org.hibernate.envers.default_catalog">CRM_VINMUS_AUDIT</prop>
+			</props>
+		</property>
+		<property name="jpaPropertyMap">
+			<map key-type="java.lang.String" value-type="java.lang.Object">
+				<entry key="hibernate.dialect" value="#{hibernateDialects['${db.type}']}" />
+				<entry key="jadira.usertype.databaseZone" value="jvm" />
+			</map>
+		</property>
+	</bean>
+
+	<util:map id="hibernateDialects">
+		<entry key="H2" value="org.hibernate.dialect.H2Dialect" />
+		<entry key="MYSQL" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
+		<entry key="SQL_SERVER" value="org.hibernate.dialect.SQLServer2008Dialect" />
+
+	</util:map>
+
+	<util:map id="dataSources">
+		<entry key="H2">
+			<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+				<property name="driverClassName" value="org.h2.Driver" />
+				<property name="url" value="jdbc:h2:mem:test;DB_CLOSE_DELAY=-1" />
+			</bean>
+		</entry>
+		<entry key="MYSQL">
+			<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+				lazy-init="true">
+				<property name="driverClassName" value="${mysql.jdbc.driver}" />
+				<property name="url" value="${mysql.jdbc.url}" />
+				<property name="username" value="${mysql.jdbc.user}" />
+				<property name="password" value="${mysql.jdbc.password}" />
+			</bean>
+		</entry>
+		<entry key="SQL_SERVER">
+			<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+				lazy-init="true">
+				<property name="driverClassName" value="${sqlserver.jdbc.driver}" />
+				<property name="url" value="${sqlserver.jdbc.url}" />
+				<property name="username" value="${sqlserver.jdbc.user}" />
+				<property name="password" value="${sqlserver.jdbc.password}" />
+			</bean>
+		</entry>
+
+	</util:map>
+
+
+</beans>

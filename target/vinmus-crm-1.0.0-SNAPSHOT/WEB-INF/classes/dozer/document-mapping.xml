@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://dozer.sourceforge.net
+           http://dozer.sourceforge.net/schema/beanmapping.xsd">
+
+    <mapping wildcard="true" map-null="true">
+        <class-a>com.bys.crm.domain.erp.model.ACDocuments</class-a>
+        <class-b>com.bys.crm.app.dto.DocumentDto
+        </class-b>
+        <field copy-by-reference="true">
+            <a>createdDate</a>
+            <b>createdDate</b>
+        </field>
+        <field copy-by-reference="true">
+            <a>documentDate</a>
+            <b>documentDate</b>
+        </field>
+    </mapping>
+
+</mappings>
